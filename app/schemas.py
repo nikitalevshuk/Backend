@@ -9,7 +9,7 @@ class Service(BaseModel):
 
     model_config = {'extra': "forbid"}
 
-class Specialists(BaseModel):
+class Specialist(BaseModel):
     id: int
     name: str
 
