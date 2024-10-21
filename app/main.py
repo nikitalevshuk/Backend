@@ -25,3 +25,11 @@ async def create_service(service:Annotated[Service, Body()]):
         raise HTTPException(status_code=400, detail="Service id is already exists")
     services[service.id] = service
     return services[service.id]
+
+#редактируем услугу
+@app.put("/services/{service_id}", response_model=Service)
+async def edit_service(service_id:Annotated[int, Path()], updated_service:Annotated[Service, Body()]):
+    if service_id not in services:
+        raise HTTPException(status_code=404, detail = "Service not found")
+    services[service_id] = updated_service
+    return updated_service
