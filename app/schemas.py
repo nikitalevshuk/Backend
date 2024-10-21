@@ -8,3 +8,9 @@ class Service(BaseModel):
     duration: int
 
     model_config = {'extra': "forbid"}
+
+class Specialists(BaseModel):
+    id: int
+    name: str
+
+    model_config = {'extra': "forbid"}

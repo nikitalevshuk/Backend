@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException, Path, Query, Body
 from typing import Annotated, List, Optional
 
-from app.schemas import Service
+from app.schemas import Service, Specialists
 from app.models import services, specialists
 
 app = FastAPI()
@@ -41,3 +41,8 @@ async def delete_service(service_id: Annotated[int, Path(description="The ID of 
         raise HTTPException(status_code=404, detail = "Service not found")
     del services[service_id]
     return {"detail": "Service deleted successfully"}
+
+@app.get("/specialists/", response_model=List[Specialists])
+async def get_allSpecialists():
+    return list(specialists.values())
+    
