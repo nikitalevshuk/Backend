@@ -33,3 +33,11 @@ async def edit_service(service_id:Annotated[int, Path()], updated_service:Annota
         raise HTTPException(status_code=404, detail = "Service not found")
     services[service_id] = updated_service
     return updated_service
+
+#удаляем услугу
+@app.delete("/services/{service_id}", response_model=dict)
+async def delete_service(service_id: Annotated[int, Path(description="The ID of the service to delete")]):
+    if service_id not in services:
+        raise HTTPException(status_code=404, detail = "Service not found")
+    del services[service_id]
+    return {"detail": "Service deleted successfully"}
