@@ -1,4 +1,4 @@
-from pydantic import HttpUrl
+from datetime import datetime
 
 
 services = {
@@ -9,4 +9,9 @@ services = {
 specialists = {
     1:{"id": 1, "name": "Петька Гвоздиков"},
     2:{"id": 2, "name": "Стас Шило"}
+}
+
+orders = {
+    1:{"id":1, "name": "Михаил", "service_id": 1, "specialist_id": 1, "time": datetime.strptime("2024-10-30 15:30:00", "%Y-%m-%d %H:%M:%S")},
+    1:{"id":2, "name": "Александр", "service_id": 2, "specialist_id": 2, "time": datetime.strptime("2024-10-28 14:30:00", "%Y-%m-%d %H:%M:%S")}
 }
