@@ -1,23 +1,34 @@
 from pydantic import BaseModel, Field
-from typing import Literal, Optional
 
+# эта модель требует пересмотра, как и операция, к которой она относится
 class ServiceUpdate(BaseModel):
-    id: Optional[int] = Field(default=None, example=1)
-    name: Optional[str] = Field(default=None, example="Название услуги")
-    description: Optional[str] = Field(default=None, example="Описание услуги")
-    price: Optional[Literal[20, 30, 40]] = Field(default=None, example=20)
-    duration: Literal[30, 45, 60, 75, None] = Field(default=None, example=30)
+    id: int | None = Field(default=None, example=None)
+    name: str | None = Field(default=None, example=None)
+    description: str | None = Field(default=None, example=None)
+    price: int | None = Field(default=None, example=None)
+    duration: int | None = Field(default=None, example=None)
 
-class Service(BaseModel):
-    id: int = Field(example=1)
+class ServiceWithoutId(BaseModel):
     name: str = Field(example="Название услуги")
     description: str = Field(example="Описание услуги")
-    price: Literal[20, 30, 40] = Field(example=20)
-    duration: Literal[30, 45, 60, 75] = Field(example=45)
+    price: int = Field(example=20)
+    duration: int = Field(example=45)
 
-class Specialist(BaseModel):
+
+class Service(ServiceWithoutId):
     id: int = Field(example=1)
+    
+    class Config:
+        from_attributes = True
+
+class SpecialistwithoutId(BaseModel):
     name: str = Field(example="Name")
+
+class Specialist(SpecialistwithoutId):
+    id: int = Field(example=1)
+
+    class Config:
+        from_attributes = True
 
 class Orders(BaseModel):
     id: int = Field(example=1)
