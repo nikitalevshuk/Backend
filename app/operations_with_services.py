@@ -1,18 +1,23 @@
-from fastapi import Path, Body, Depends, APIRouter
+from fastapi import Path, Depends, APIRouter
+
 from typing import Annotated, List
+
 from app.schemas import Service, ServiceUpdate, ServiceWithoutId
-from app.models import services, ServicesTable
+from app.models import ServicesTable
 from app.dependencies import get_service_or_404, get_db
-from app.queries.orm import SyncOrm
-from sqlalchemy.orm import Session
+
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 
 router = APIRouter(prefix="/services", tags=["Services"])
 
 #читаем все услуги
 @router.get("/", response_model=List[Service])
-async def read_services(db: Annotated[Session, Depends(get_db)]):
-    result = db.query(ServicesTable).all()
-    return result
+async def read_services(db: Annotated[AsyncSession, Depends(get_db)]):
+    result = await db.execute(select(ServicesTable))
+    services = result.scalars().all()
+
+    return services
 
 #читаем одну услугу
 @router.get("/{service_id}", response_model=Service)
@@ -21,30 +26,34 @@ async def read_service(service:Annotated[ServicesTable, Depends(get_service_or_4
 
 #создаем услугу
 @router.post("/", response_model=Service)
-async def create_service(service: ServiceWithoutId, db:Annotated[Session, Depends(get_db)]):
+async def create_service(service: ServiceWithoutId, db:Annotated[AsyncSession, Depends(get_db)]):
     db_service = ServicesTable(
         name = service.name,
         description = service.description,
         price = service.price,
         duration = service.duration
     )
+
     db.add(db_service)
-    db.commit()
-    db.refresh(db_service)
+    await db.commit()
+    await db.refresh(db_service)
+
     return db_service
     
 #редактируем услугу
 @router.put("/{service_id}", response_model = Service)
 async def edit_service(
     service_id: Annotated[int, Path(example=1)],
-    service: Annotated[ServiceUpdate, Body()],
+    service: ServiceUpdate,
     stored_service: Annotated[ServicesTable, Depends(get_service_or_404)],
-    db: Annotated[Session, Depends(get_db)]
+    db: Annotated[AsyncSession, Depends(get_db)]
 ):    
     for key, value in service.dict(exclude_unset=True).items():
         setattr(stored_service, key, value)
-    db.commit()
-    db.refresh(stored_service)
+
+    await db.commit()
+    await db.refresh(stored_service)
+
     return stored_service   
     
    
@@ -52,8 +61,9 @@ async def edit_service(
 @router.delete("/{service_id}")
 async def delete_service(
     service: Annotated[ServicesTable, Depends(get_service_or_404)],
-    db: Annotated[Session, Depends(get_db)]  
+    db: Annotated[AsyncSession, Depends(get_db)]  
 ):
-    db.delete(service)
-    db.commit()
+    await db.delete(service)
+    await db.commit()
+    
     return {"detail":"service was deleted succesfuly"}

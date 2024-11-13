@@ -1,6 +1,8 @@
 from typing import Annotated
+
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
+
 from app.database import Base
 
 # эта переменная позднее указывается в качестве типа данных, но еще и содержит в себе информацию о колонке, что сокращает код, при этом на информацию о колонке из перемен-

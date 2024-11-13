@@ -1,5 +1,6 @@
 from app.models import metadata_obj, workers_table  
 from app.database import sync_engine
+
 from sqlalchemy import text, insert, select, update
 
 # создал класс с целью удобного поднесения функций под одну гребенку(в моем случае синхронные функции для работы с не ORM таблицами)

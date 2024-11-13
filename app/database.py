@@ -1,18 +1,19 @@
 from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
+
 from app.config import settings
 
 # создаю синхронный движок(для этого импортирую из sqlalchemy create_engine и передаю туда ссылку на БД и другие разные параметры)
 sync_engine = create_engine(
     url=settings.DATABASE_URL_psycopg,
-    echo=True
+    echo=False
 )
 
 # создаю асинхронный движок, отличие только в том что импортирую из sqlalchemy.ext.asyncio create_async_engine 
 async_engine = create_async_engine(
     url=settings.DATABASE_URL_asyncpg,
-    echo=True
+    echo=False
 )
 
 # создаю класс Base который наследуется от DeclarativeBase, суть в том что для создания таблицы используя ORM мне нужно унаследовать эти таблицы от босса,
