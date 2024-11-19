@@ -4,9 +4,12 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from fastapi import HTTPException, Depends
+from fastapi.exceptions import RequestValidationError
 
 from app.models import ServicesTable, SpecialistsTable
 from app.database import async_session_factory
+
+
 
 #создаю сессию
 async def get_db():
@@ -27,11 +30,10 @@ async def get_specialist_or_404(specialist_id: int, db: Annotated[AsyncSession, 
     return specialist
 
 #чек существует ли сервис по айди
-async def get_service_or_404(service_id: int, db: Annotated[AsyncSession, Depends(get_db)]) -> ServicesTable:
+async def get_service_or_404(service_id:int, db: Annotated[AsyncSession, Depends(get_db)]) -> ServicesTable:
     result = await db.execute(select(ServicesTable).where(ServicesTable.id == service_id))
     service = result.scalar_one_or_none()
-
-    if service is None:
-        raise HTTPException(status_code = 404, detail = "Service not found")
     
+    if service is None:
+        raise HTTPException(detail="Service not found", status_code=404)
     return service

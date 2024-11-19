@@ -22,7 +22,7 @@ config.set_main_option("sqlalchemy.url", settings.DATABASE_URL_asyncpg + "?async
 
 # add your model's MetaData object here
 # for 'autogenerate' support
-# from myapp import mymodel
+# from myapp import mymodel 
 # target_metadata = mymodel.Base.metadata
 target_metadata = Base.metadata
 
@@ -71,7 +71,9 @@ def run_migrations_online() -> None:
 
     with connectable.connect() as connection:
         context.configure(
-            connection=connection, target_metadata=target_metadata
+            connection=connection,
+            target_metadata=target_metadata,
+            compare_server_default=True,
         )
 
         with context.begin_transaction():

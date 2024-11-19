@@ -32,23 +32,3 @@ class OrdersTable(Base):
     name: Mapped[str] 
     service_id: Mapped[str] = mapped_column(ForeignKey("services.id", ondelete="CASCADE"))
     specialist_id: Mapped[str] = mapped_column(ForeignKey("specialists.id", ondelete="CASCADE"))
-
-
-
-
-
-# временное решение которое позже будет заменено на БД
-services = {
-    1:{"id": 1, "name": "Стрижка", "description":"Классическая короткая стрижка", "price": 40, "duration": 60},
-    2:{"id": 2, "name": "Бритье", "description":"Услуга бритья опасной бритвой", "price": 20, "duration": 30}
-}
-
-specialists = {
-    1:{"id": 1, "name": "Петька Гвоздиков"},
-    2:{"id": 2, "name": "Стас Шило"}
-}
-
-orders = {
-    1:{"id":1, "name": "Михаил", "service_id": 1, "specialist_id": 1},
-    1:{"id":2, "name": "Александр", "service_id": 2, "specialist_id": 2}
-}
